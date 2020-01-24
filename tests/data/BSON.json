@@ -1,0 +1,18 @@
+{
+  "$oid": "Objectid",
+  "$symbol": "Symbol",
+  "$numberInt": "Int32",
+  "$numberLong": "Int64",
+  "$numberDouble": "Double",
+  "$numberDecimal": "Decimal128",
+  "$binary": "Binary",
+  "$code": "Code",
+  "$timestamp": "Timestamp",
+  "$regularExpression": "Regular Expression",
+  "$dbPointer": "DBPointer",
+  "$date": "Datetime",
+  "$ref": "DBRef",
+  "$minKey": "MinKey",
+  "$maxKey": "MaxKey",
+  "$undefined": "Undefined"
+}

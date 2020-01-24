@@ -1,0 +1,41 @@
+{
+  "name": "json-to-graphql-typesystem",
+  "version": "0.1.0",
+  "description": "Convert json data to GraphQL type system",
+  "main": "json-to-graphql-typesystem.js",
+  "scripts": {
+    "test": "nyc --reporter=lcov tape tests/*.test.js",
+    "coverage": "nyc --reporter=text-lcov report | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MorganConrad/json-to-graphql-typesystem.git"
+  },
+  "keywords": [
+    "json",
+    "graphql",
+    "graphql-schema",
+    "convert"
+  ],
+  "files": [
+    "main.js",
+    "json-to-graphql-typesystem.js",
+    "lib/*"
+  ],
+  "devDependencies": {
+    "coveralls": "^3.0",
+    "nyc": "^15.0.0",
+    "tape": "^4.6"
+  },
+  "dependencies": {
+    "gnucl": "MorganConrad/gnucl",
+    "got": "^10.3.0",
+    "mongodb": "^3.4.1"
+  },
+  "author": "Morgan Conrad <flyingspaniel@gmail.com> (http://flyingspaniel.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MorganConrad/json-to-graphql-typesystem/issues"
+  },
+  "homepage": "https://github.com/MorganConrad/json-to-graphql-typesystem#readme"
+}

@@ -1,0 +1,29 @@
+{
+  "adult": false,
+  "backdrop_path": "/dnaitaoCh8MftfYEVnprcuYExZp.jpg",
+  "belongs_to_collection": {
+    "id": 256322,
+    "name": "The Purge Collection",
+    "poster_path": "/nP3c8mTSxlis4vfg0UjlkK8LRG9.jpg",
+    "backdrop_path": "/quFWGOA4I5KCTsyDbvLh6PHNZwv.jpg"
+  },
+  "budget": 13000000,
+  "genres": [
+    {
+      "id": 28,
+      "name": "Action"
+    },
+    {
+      "id": 27,
+      "name": "Horror"
+    },
+    {
+      "id": 878,
+      "name": "Science Fiction"
+    },
+    {
+      "id": 53,
+      "name": "Thriller"
+    }
+  ]
+}
