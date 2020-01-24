@@ -1,4 +1,4 @@
-![Build Status](https://secure.travis-ci.org/MorganConrad/json-to-graphql-typesystem.png)](http://travis-ci.org/MorganConrad/json-to-graphql-typesystem)
+[![Build Status](https://secure.travis-ci.org/MorganConrad/json-to-graphql-typesystem.png)](http://travis-ci.org/MorganConrad/json-to-graphql-typesystem)
 [![License](http://img.shields.io/badge/license-MIT-A31F34.svg)](https://github.com/MorganConrad/json-to-graphql-typesystem)
 [![Known Vulnerabilities](https://snyk.io/test/github/morganconrad/json-to-graphql-typesystem/badge.svg)](https://snyk.io/test/github/morganconrad/json-to-graphql-typesystem)
 [![Coverage Status](https://coveralls.io/repos/github/MorganConrad/json-to-graphql-typesystem/badge.svg)](https://coveralls.io/github/MorganConrad/json-to-graphql-typesystem)
@@ -8,9 +8,9 @@
 # json-to-graphql-typesystem
 Convert json data to GraphQL type system
 
-Turn this [SWAPI.co data](https://swapi.co/api/people/1)
+Turn this [Star Wars SWAPI.co data](https://swapi.co/api/people/1)
 
-```json
+```
 {
 	"name": "Luke Skywalker",
 	"height": "172",
@@ -88,20 +88,20 @@ type api_people_1 {
 
 ## main.js   CLI
 
-```text
-    [--outdir=dir]            put results into dir, which **must exist**
-    [--outext=.ext]           put results into files ending with .ext
-                              (if neither, results go to stdout)
-    [--clean]                 try to cleanup input files (takes first {...})
+```
+  [--outdir=dir]            put results into dir, which **must exist**
+  [--outext=.ext]           put results into files ending with .ext
+                          (if neither, results go to stdout)
+  [--clean]                 try to cleanup input files (takes first {...})
     
-    // three input possibilities: files, a mondoDb uri, or a JSON API url
+  // three input possibilities: files, a mondoDb uri, or a JSON API url
     
-    file1.json file2.json...  json files to parse and generate schemas
+  file1.json file2.json...  json files to parse and generate schemas
     
-    [--uri=mongodb://...]     mongo DB to read first document of collections
-    coll1 coll2...            names of collections to use (if none provided, will parse all)
-    
-    [--url=http://...]        read JSON from this URL
+  [--uri=mongodb://...]     mongo DB (reads first document of collections)
+  coll1 coll2...            names of collections to use (if none provided, will parse all)
+   
+  [--url=http://...]        GET JSON from this URL
 ```
 
 ### Obscure Options
@@ -118,10 +118,11 @@ These files contain additional typing details such as `{"$date":{"$numberLong":"
 
 ## JSONToGraphQLTS
 
-Does the actual conversion of an **object** into a string graphql type representation
+Module that does the actual conversion of an **object** into a string graphql type representation
 
-### new JSONToGraphQLTS(userOptions, userBSON)
- - userOptions described below
+### constructor(userOptions, userBSON)
+ - userOptions described [below](#useroptions)
+ - userBSON    additional BSON types
 
 ### convert(data, rootType)
  - data:    Javascript object  (non-null)
@@ -150,6 +151,7 @@ type rootType {
 ```
 
 #### userOptions
+ - BSON              use standard BSON types
  - bson_prefix       additional prefix for any BSON types, default = 'BSON_'
  - eol               default '\n',
  - nestedDelimiter   how to delimit nested classes, default '_'
