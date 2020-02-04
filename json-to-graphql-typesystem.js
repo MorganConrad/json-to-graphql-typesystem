@@ -24,7 +24,9 @@ const DEFAULT_OPTIONS = {
   rootType: "RootType",
   bson_prefix: 'BSON_',
   eol: '\n',
-  nestedDelimiter: '_'
+  nestedDelimiter: '_',
+  nullData: 'TBD',
+  suffix: ''
 };
 
 
@@ -59,7 +61,7 @@ class JSONToGraphQLTS {
 
   r1(type, field, data) {
     let dataType = this.dataType(type, field, data);
-    return _buildline(field, dataType);
+    return this._buildline(field, dataType);
   }
 
 
@@ -90,6 +92,8 @@ class JSONToGraphQLTS {
   }
 
   _primitive(data) {
+    if (data == null)
+      return this.options.nullData;
     let type = typeof data;
     if (type === 'string')
       return this._isSpecialString(data) || "String";
@@ -112,12 +116,17 @@ class JSONToGraphQLTS {
     return null;
   }
 
+
+  _buildline(field, type) {
+    let line = "  " + field + ": " + type;
+    if (this.options.suffix && (type !== this.options.nullData))
+      line += this.options.suffix;
+
+    return line;
+  }
 }
 
 
-function _buildline(field, ...values) {
-  return "  " + field + ": " + values.join('');
-}
 
 
 module.exports = JSONToGraphQLTS;

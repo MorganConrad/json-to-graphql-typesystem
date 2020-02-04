@@ -29,14 +29,13 @@ test("akc1", function(t) {
 test("nested", function(t) {
   let data = JSON.parse(readFile("nested.json"));
 
-  let j2g = new JSONToGraphQLTS();
+  let j2g = new JSONToGraphQLTS( { nullData: "NULL", suffix: '!' });
   let result = j2g.convertToHash(data);
 
   let values = Object.values(result);
   t.equals(values.length, 3);
-  t.equals(result.RootType_genres, 'type RootType_genres {\n  id: Int\n  name: String\n}');
-
-  // console.dir(result);
+  t.equals(result.RootType_genres, 'type RootType_genres {\n  id: Int!\n  name: String!\n}');
+  t.true(result.RootType_belongs_to_collection.includes("testNull: NULL\n"));  // no !
 
   t.end();
 });

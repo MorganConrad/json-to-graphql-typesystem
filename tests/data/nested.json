@@ -4,6 +4,7 @@
   "belongs_to_collection": {
     "id": 256322,
     "name": "The Purge Collection",
+    "testNull": null,
     "poster_path": "/nP3c8mTSxlis4vfg0UjlkK8LRG9.jpg",
     "backdrop_path": "/quFWGOA4I5KCTsyDbvLh6PHNZwv.jpg"
   },

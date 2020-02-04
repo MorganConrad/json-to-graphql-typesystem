@@ -156,8 +156,13 @@ type rootType {
  - bson_prefix       additional prefix for any BSON types, default = 'BSON_'
  - eol               default '\n',
  - nestedDelimiter   how to delimit nested classes, default '_'
+ - nullData          "type" to return if data is null, default = 'TBD'
+ - suffix            default '', add this after every non-null type (usually '!')
 
 
 ## Notes, Changes, Todos, and Caveats
 
  1) v0.1.1 added the --header option.
+ 2) v0.1.2 
+  - added nullData test and option
+  - added --suffix
