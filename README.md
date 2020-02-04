@@ -102,6 +102,7 @@ type api_people_1 {
   coll1 coll2...            names of collections to use (if none provided, will parse all)
    
   [--url=http://...]        GET JSON from this URL
+  [--header=X-Foo:Bar]      add this header (may appear multiple times on command line)
 ```
 
 ### Obscure Options
@@ -157,5 +158,6 @@ type rootType {
  - nestedDelimiter   how to delimit nested classes, default '_'
 
 
-## Notes, Todos, and Caveats
+## Notes, Changes, Todos, and Caveats
 
+ 1) v0.1.1 added the --header option.
