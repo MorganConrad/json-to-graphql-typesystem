@@ -6,7 +6,7 @@
 
 
 # json-to-graphql-typesystem
-Convert json data to GraphQL type system
+### Convert json data to GraphQL type system data, e.g.
 
 Turn this [Star Wars SWAPI.co data](https://swapi.co/api/people/1)
 
@@ -81,7 +81,7 @@ type api_people_1 {
 
 > node main.js --uri=mongodb://user:password@host:port/database?options
     converts all collections of that database
-    
+
 > node main.js file1.json file2.json  (try ./tests/data/nested.json)
     converts the given json files
 ```
@@ -93,14 +93,17 @@ type api_people_1 {
   [--outext=.ext]           put results into files ending with .ext
                           (if neither, results go to stdout)
   [--clean]                 try to cleanup input files (takes first {...})
-    
+  [--suffix=!]              add a ! after every non-null field
+  [--nullData=xxx]          the "type" to use if the example data is null.  default = "TBD"
+
+
   // three input possibilities: files, a mondoDb uri, or a JSON API url
-    
+
   file1.json file2.json...  json files to parse and generate schemas
-    
+
   [--uri=mongodb://...]     mongo DB (reads first document of collections)
-  coll1 coll2...            names of collections to use (if none provided, will parse all)
-   
+  coll1 coll2...            (optional) names of collections to use (if none provided, will parse all)
+
   [--url=http://...]        GET JSON from this URL
   [--header=X-Foo:Bar]      add this header (may appear multiple times on command line)
 ```
@@ -117,9 +120,17 @@ These files contain additional typing details such as `{"$date":{"$numberLong":"
  - --clean          Since the exports are not in proper JSON format, this corrects them
 
 
+## main.js, main_helper.js, lib/*utils.js
+
+Command line application
+ - main_helper.js is split off for easier testing
+ - utilities for files, accessing JSON data from a URL, or reading from a mongoDB URI
+ - arguments as above
+
 ## JSONToGraphQLTS
 
-Module that does the actual conversion of an **object** into a string graphql type representation
+Module that does the actual conversion of an **object** into a string graphql type representation.
+ - use this if the command line app doesn't meet your needs
 
 ### constructor(userOptions, userBSON)
  - userOptions described [below](#useroptions)
@@ -128,8 +139,8 @@ Module that does the actual conversion of an **object** into a string graphql ty
 ### convert(data, rootType)
  - data:    Javascript object  (non-null)
  - rootType the name of the Type for this root of this object
- 
-Returns a nicely formatted String, possibly including nested types, _e.g._
+
+Returns a nicely formatted String, possibly preceeded by nested types, _e.g._
 
 ```
 type rootType_belongs_to_collection {
@@ -155,14 +166,18 @@ type rootType {
  - BSON              use standard BSON types
  - bson_prefix       additional prefix for any BSON types, default = 'BSON_'
  - eol               default '\n',
- - nestedDelimiter   how to delimit nested classes, default '_'
+ - nestedDelimiter   how to delimit nested classes, default '_' (see example results above)
  - nullData          "type" to return if data is null, default = 'TBD'
  - suffix            default '', add this after every non-null type (usually '!')
 
 
-## Notes, Changes, Todos, and Caveats
+## Notes, Todos, and Caveats
 
+ 1) If the example data is null, this program (obviously) cannot determine a type.  By default, the type will be set to TBD and hand-cleanup is required.
+
+## Changes
  1) v0.1.1 added the --header option.
- 2) v0.1.2 
+ 2) v0.1.2
   - added nullData test and option
   - added --suffix
+ 3) v0.2.0 reorg, added main_helper for easier testing

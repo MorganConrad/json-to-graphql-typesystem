@@ -1,17 +1,15 @@
 const fs = require("fs");
-const path = require("path");
-
 const gnucl = require("gnucl");
-const got = require("got");
 
-const JStoGQL = require("./json-to-graphql-typesystem");
-const mongoUtils = require("./lib/mongoutils");
+const fileutils = require("./lib/fileutils");
+const helper = require("./main_helper");
 
 const USAGE = `
     [--outdir=dir]            put results into dir, which **must exist**
     [--outext=.ext]           put results into files ending with .ext
                               (if neither, results go to stdout)
     [--clean]                 try to cleanup input files (takes first {...})
+    [--suffix=!]              add a ! after every non-null field
 
     // three input possibilities: files, a mondoDb uri, or a JSON API url
 
@@ -37,124 +35,19 @@ if (!args.length && !opts.uri && !opts.url) {
   process.exit();
 }
 
-let userBSON = {};
+let userBSON;
 if (opts.BSONFile) {
-  let raw = fs.readFileSync(absPath(opts.BSONFile)).toString();
+  let raw = fs.readFileSync(fileutils.absPath(opts.BSONFile)).toString();
   userBSON = JSON.parse(raw);
 }
 
-const js2gql = new JStoGQL(opts, userBSON);
-let mongoInfo;
+helper.doit(opts, args, userBSON)
+  .then(() => doExit(0))
+  .catch(doExit);
 
-if (opts.uri) { // from mongo db
-  convertFromDB(opts.uri, args)
-    .then((idsAndSchemas) => {
-      idsAndSchemas.map(({ id, schema }) => writeResult(id, schema, opts));
-    })
-    .then(() => {
-      mongoInfo.client.close();
-      doExit(0);
-    })
-    .catch(doExit);
-} else if (opts.url) {
-  // generate an ID based on path, replacing / with _
-  let nodeURL = new URL(opts.url);
-  let id = nodeURL.pathname.substr(1).replace(/\//g, "_");
-
-  let headers = doHeaders(
-    { "User-Agent": opts.UA || "json-to-graphql-typesystem" },  // always fo a User-Agent
-    opts.header
-  );
-
-  got(opts.url, { headers })
-    .then(function(response) {
-      return opts.clean
-        ? mongoUtils.firstBracket(response.body)
-        : response.body;
-    })
-    .then((body) => JSON.parse(body))
-    .then((jsob) => js2gql.convert(jsob, id))
-    .then((schema) => writeResult(id, schema, opts))
-    .then(() => doExit(0))
-    .catch(doExit);
-} else {
-  // from files  (simpler, no promises)
-  let idsAndSchemas = args.map((file) => convertOneFile(file, opts));
-  idsAndSchemas.map(({ id, schema }) => writeResult(id, schema, opts));
-  doExit(0);
-}
-
-function convertOneFile(file) {
-  let id = path.basename(file, path.extname(file));
-  let input = fs.readFileSync(absPath(file)).toString();
-  if (opts.clean) input = mongoUtils.firstBracket(input);
-  let jsob = JSON.parse(input);
-  let schema = js2gql.convert(jsob, id);
-  return { id, schema };
-}
-
-function convertFromDB(uri, collectionNames) {
-  return mongoUtils
-    .connect(uri)
-    .then((info) => {
-      mongoInfo = info; // save
-      if (!collectionNames.length)
-        collectionNames = mongoUtils.getCollectionNames(mongoInfo.db);
-      return collectionNames;
-    })
-    .then((names) =>
-      Promise.all(names.map((name) => convertOneCollection(mongoInfo.db, name)))
-    );
-}
-
-function convertOneCollection(db, name) {
-  return db
-    .collection(name, opts)
-    .findOne({})
-    .then((doc) => js2gql.convert(doc, name))
-    .then(function(schema) {
-      return { id: name, schema };
-    });
-}
-
-function writeResult(id, schema, opts) {
-  if (opts.outdir) {
-    fs.writeFileSync(
-      path.join(absPath(opts.outdir), id + (opts.outext || ".graphql")),
-      schema
-    );
-  }
-  else if (opts.outext)
-    fs.writeFileSync(path.join(__dirname, id + opts.outext), schema);
-  else {
-    console.log("\n# " + id + "\n");
-    console.log(schema);
-  }
-  return { id, schema };
-}
-
-function absPath(inPath) {
-  return path.isAbsolute(inPath) ? inPath : path.join(__dirname, inPath);
-}
 
 function doExit(err) {
   if (err) console.error(err);
   process.exit(err ? 1 : 0);
 }
 
-
-function doHeaders(inHeader, optHeaders) {
-  let outHeader = Object.assign({}, inHeader);
-  if (optHeaders) {
-    if (!Array.isArray(optHeaders))
-      optHeaders = [optHeaders];
-    for (let header of optHeaders) {
-      let colon = header.indexOf(':');
-      let key = header.substr(0, colon);
-      let value = header.substr(colon + 1)
-      outHeader[key] = value;
-    }
-  }
-
-  return outHeader;
-}
