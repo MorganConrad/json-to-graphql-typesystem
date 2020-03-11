@@ -32,6 +32,7 @@ test("URL", function(t) {
       t.equals(result.schema, 'type todos {\n  userId: Int\n  id: Int\n  title: String\n  completed: Boolean\n}');
       t.end();
     })
+    .catch((err) => console.error(err));
 
 });
 
@@ -47,7 +48,7 @@ test("URI", function(t) {
       t.equals(result.schema, 'type cpe {\n  _id: String\n  org: String\n  dates: [Date]\n  state: String\n  location: String\n  club: String\n  urls: [Id]\n  days: Date\n  longLat: [Float]\n}');
       t.end();
     })
-
+    .catch((err) => console.error(err));
 });
 
 
@@ -63,7 +64,7 @@ test("Github", function(t) {
       t.equals(result.schema + '\n', expectedSchema);
       t.end();
     })
-
+    .catch((err) => console.error(err));
 });
 
 
