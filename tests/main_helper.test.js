@@ -14,8 +14,8 @@ test('file', function(t) {
     .then((result) => {
       t.equals(result.id, 'akc');
       t.equals(result.schema + '\n', expectedSchema);
-      return t.end();
     })
+    .then(() => t.end())
     .catch((err) => { console.error(err); t.end(); });
 })
 
@@ -31,8 +31,8 @@ test("URL", function(t) {
       console.dir(result);
       t.equals(result.id, 'todos');
       t.equals(result.schema, 'type todos {\n  userId: Int\n  id: Int\n  title: String\n  completed: Boolean\n}');
-      return t.end();
     })
+    .then(() => t.end())
     .catch((err) => { console.error(err); t.end(); });
 
 });
@@ -47,8 +47,8 @@ test("URI", function(t) {
       console.dir(result);
       t.equals(result.id, 'cpe');
       t.equals(result.schema, 'type cpe {\n  _id: String\n  org: String\n  dates: [Date]\n  state: String\n  location: String\n  club: String\n  urls: [Id]\n  days: Date\n  longLat: [Float]\n}');
-      return t.end();
     })
+    .then(() => t.end())
     .catch((err) => { console.error(err); t.end(); });
 });
 
@@ -63,8 +63,8 @@ test("Github", function(t) {
     .then((result) => {
       t.equals(result.id, 'repos_vmg_redcarpet_issues');
       t.equals(result.schema + '\n', expectedSchema);
-      t.end();
     })
+    .then(() => t.end())
     .catch((err) => { console.error(err); t.end(); });
 });
 
