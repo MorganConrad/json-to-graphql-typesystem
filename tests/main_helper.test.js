@@ -27,6 +27,7 @@ test("URL", function(t) {
   }, [])
     .then((results) => results[0])
     .then((result) => {
+      console.dir(result);
       t.equals(result.id, 'todos');
       t.equals(result.schema, 'type todos {\n  userId: Int\n  id: Int\n  title: String\n  completed: Boolean\n}');
       t.end();
@@ -41,7 +42,7 @@ test("URI", function(t) {
   }, [])
     .then((results) => results[1])  // cpe
     .then((result) => {
-      // console.dir(result);
+      console.dir(result);
       t.equals(result.id, 'cpe');
       t.equals(result.schema, 'type cpe {\n  _id: String\n  org: String\n  dates: [Date]\n  state: String\n  location: String\n  club: String\n  urls: [Id]\n  days: Date\n  longLat: [Float]\n}');
       t.end();
