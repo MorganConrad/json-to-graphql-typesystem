@@ -25,8 +25,7 @@ const USAGE = `
 let { args, opts } = gnucl(process.argv);
 
 // make local testing easier...
-if (opts.uri === "TEST")
-  opts.uri = process.env.MONGOLAB_URI;
+if (opts.uri === "TEST") opts.uri = process.env.MONGOLAB_URI;
 if (opts.url === "TEST")
   opts.url = "https://jsonplaceholder.typicode.com/todos";
 
@@ -41,13 +40,12 @@ if (opts.BSONFile) {
   userBSON = JSON.parse(raw);
 }
 
-helper.doit(opts, args, userBSON)
+helper
+  .doit(opts, args, userBSON)
   .then(() => doExit(0))
   .catch(doExit);
-
 
 function doExit(err) {
   if (err) console.error(err);
   process.exit(err ? 1 : 0);
 }
-

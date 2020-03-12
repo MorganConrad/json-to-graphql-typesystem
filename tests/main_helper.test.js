@@ -3,6 +3,26 @@ const test = require('tape');
 const mainHelper = require('../main_helper');
 const urlutils = require('../lib/urlUtils');
 
+const urlExpectedResult =
+`type todos {
+  userId: Int
+  id: Int
+  title: String
+  completed: Boolean
+}`;
+
+const uriExpectedResult =
+`type cpe {
+  _id: String
+  org: String
+  dates: [Date]
+  state: String
+  location: String
+  club: String
+  urls: [Id]
+  days: Date
+  longLat: [Float]
+}`;
 
 test('file', function(t) {
   const expectedSchema = fs.readFileSync('./tests/data/akcschema.txt').toString();
@@ -16,10 +36,8 @@ test('file', function(t) {
       t.equals(result.schema + '\n', expectedSchema);
     })
     .then(() => t.end())
-    .catch((err) => { console.error(err); t.end(); });
+    .catch((err) => { t.error(err); t.end(); });
 })
-
-
 
 test("URL", function(t) {
   mainHelper.doit( {
@@ -28,9 +46,8 @@ test("URL", function(t) {
   }, [])
     .then((results) => results[0])
     .then((result) => {
-      console.dir(result);
       t.equals(result.id, 'todos');
-      t.equals(result.schema, 'type todos {\n  userId: Int\n  id: Int\n  title: String\n  completed: Boolean\n}');
+      t.equals(result.schema, urlExpectedResult);
     })
     .then(() => t.end())
     .catch((err) => { t.error(err); t.end(); });
@@ -44,14 +61,12 @@ test("URI", function(t) {
   }, [])
     .then((results) => results[1])  // cpe
     .then((result) => {
-      console.dir(result);
       t.equals(result.id, 'cpe');
-      t.equals(result.schema, 'type cpe {\n  _id: String\n  org: String\n  dates: [Date]\n  state: String\n  location: String\n  club: String\n  urls: [Id]\n  days: Date\n  longLat: [Float]\n}');
+      t.equals(result.schema, uriExpectedResult);
     })
     .then(() => t.end())
     .catch((err) => {  t.error(err); t.end(); });
 });
-
 
 test("Github", function(t) {
   const expectedSchema = fs.readFileSync('./tests/data/github1schema.txt').toString();
@@ -76,4 +91,3 @@ test("createHeaders", function(t) {
   t.equals(h.bar, "bar:1");
   t.end();
 })
-
