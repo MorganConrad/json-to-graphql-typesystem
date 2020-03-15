@@ -6,9 +6,9 @@
 
 
 # json-to-graphql-typesystem
-### Convert json data to GraphQL type system data, e.g.
+### Need to convert a legacy JSON/REST API to GraphQL?  This can help.
 
-Turn this [Star Wars SWAPI.co data](https://swapi.co/api/people/1)
+For example, turn this [Star Wars SWAPI.co data](https://swapi.co/api/people/1)
 
 ```
 {
@@ -49,7 +49,7 @@ Turn this [Star Wars SWAPI.co data](https://swapi.co/api/people/1)
 into this:
 
 ```
-type api_people_1 {
+type people {
   name: String
   height: String
   mass: Date
@@ -69,63 +69,58 @@ type api_people_1 {
 }
 ```
 
+## Installation
+```
+> npm install -g json-to-graphql-typesystem
+Creates a global CLI app named j2gt (see package.json).  Optionally, for more control
+
+> git clone https://github.com/MorganConrad/json-to-graphql-typesystem.git
+> cd json-to-graphql-typesystem
+> npm install
+```
+
 ## Quick Usage
 
+(showing a mix of j2gt and node cli.js)
 ```
-> git clone https://github.com/MorganConrad/json-to-graphql-typesystem.git
-
-> cd json-to-graphql-typesystem
-
-> node main.js --url=https://swapi.co/api/people/1
+> curl https://swapi.co/api/people/1 | j2gt --id=people -
     results shown above
 
-> node main.js --uri=mongodb://user:password@host:port/database?options
+> node cli.js --uri=mongodb://user:password@host:port/database?options
     converts all collections of that database
 
-> node main.js file1.json file2.json  (try ./tests/data/nested.json)
+> node cli.js file1.json file2.json  (try ./tests/data/nested.json)
     converts the given json files
 ```
 
-## main.js   CLI
+## CLI: cli.js
 
 ```
   [--outdir=dir]            put results into dir, which **must exist**
   [--outext=.ext]           put results into files ending with .ext
                           (if neither, results go to stdout)
-  [--clean]                 try to cleanup input files (takes first {...})
+  [--clean]                 try to cleanup input files (takes first {...} from an array of results)
   [--suffix=!]              add a ! after every non-null field
   [--nullData=xxx]          the "type" to use if the example data is null.  default = "TBD"
+  [--id=typename]           use this for the root "type".  Otherwise, filename or collection name will be used
 
-
-  // three input possibilities: files, a mondoDb uri, or a JSON API url
+  // two input possibilities: files, or a JSON API url
 
   file1.json file2.json...  json files to parse and generate schemas
+                             '-' means read from stdin
 
   [--uri=mongodb://...]     mongo DB (reads first document of collections)
   coll1 coll2...            (optional) names of collections to use (if none provided, will parse all)
-
-  [--url=http://...]        GET JSON from this URL
-  [--header=X-Foo:Bar]      add this header (may appear multiple times on command line)
 ```
 
 ### Obscure Options
-
- - --UA=foo         use this for User-Agent on urls  default = 'json-to-graphql-typesystem'
 
 The following options only apply if the files were exported by something like by Mongo DB Compass.  See tests/data/akc.json for an example.
 These files contain additional typing details such as `{"$date":{"$numberLong":"1397952000000"}}`.
 
  - --BSON           use the standard conversions (see json-to-graphql-typesystem.BSON_CONVERSIONS)
  - --BSONFile=name  use conversions read from this JSON file
- - --clean          Since the exports are not in proper JSON format, this corrects them
-
-
-## main.js, main_helper.js, lib/*utils.js
-
-Command line application
- - main_helper.js is split off for easier testing
- - utilities for files, accessing JSON data from a URL, or reading from a mongoDB URI
- - arguments as above
+ - --clean          Since the exports are not in proper JSON format, you must correct them
 
 ## JSONToGraphQLTS
 
@@ -138,7 +133,7 @@ Module that does the actual conversion of an **object** into a string graphql ty
 
 ### convert(data, rootType)
  - data:    Javascript object  (non-null)
- - rootType the name of the Type for this root of this object
+ - rootType the name of the Type for this root of this object  (e.g. used by the --id=xxx option)
 
 Returns a nicely formatted String, possibly preceeded by nested types, _e.g._
 
@@ -181,3 +176,13 @@ type rootType {
   - added nullData test and option
   - added --suffix
  3) v0.2.0 reorg, added main_helper for easier testing
+ 4) v0.3.0
+  - remove URL option, but support reading from stdin instead
+  - main.js -> cli.js, add bin entry to package.json
+
+### Other Examples
+
+ 1) Try converting data from the GitHub issue API
+ `curl https://api.github.com/repos/MorganConrad/json-to-graphql-typesystem/issues?state=closed | j2gt --id=issues --clean -`
+ The result should look like ./tests/data/github_issues.graphql
+

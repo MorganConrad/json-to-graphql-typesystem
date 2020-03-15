@@ -8,6 +8,7 @@ type akc_longLat {
   $numberDouble: String
 }
 type akc {
+  _id: String
   org: String
   dates: [akc_dates]
   urls: [Id]
@@ -17,6 +18,5 @@ type akc {
   location: String
   state: String
   days: Date
-  _id: String
   longLat: [akc_longLat]
 }

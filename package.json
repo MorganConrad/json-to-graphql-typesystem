@@ -18,7 +18,8 @@
     "convert"
   ],
   "files": [
-    "main.js",
+    "cli.js",
+    "cli_helper.js",
     "json-to-graphql-typesystem.js",
     "lib/*"
   ],
@@ -29,11 +30,13 @@
   },
   "dependencies": {
     "gnucl": "MorganConrad/gnucl",
-    "got": "^10.3.0",
     "mongodb": "^3.4.1"
   },
   "author": "Morgan Conrad <flyingspaniel@gmail.com> (http://flyingspaniel.com/)",
   "license": "MIT",
+  "bin": {
+    "j2gt": "./cli.js"
+  },
   "bugs": {
     "url": "https://github.com/MorganConrad/json-to-graphql-typesystem/issues"
   },

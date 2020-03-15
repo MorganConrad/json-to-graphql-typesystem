@@ -1,7 +1,6 @@
-const fs = require('fs');
 const test = require('tape');
-const mainHelper = require('../main_helper');
-const urlutils = require('../lib/urlUtils');
+const cli = require('../cli_helper');
+const fileutils = require('../lib/fileutils');
 
 const urlExpectedResult =
 `type todos {
@@ -25,13 +24,14 @@ const uriExpectedResult =
 }`;
 
 test('file', function(t) {
-  const expectedSchema = fs.readFileSync('./tests/data/akcschema.txt').toString();
-  mainHelper.doit( {
+  const expectedSchema = fileutils.readFileSync('./tests/data/akcschema.txt');
+  cli.doit( {
     unitTestMode: true,
     clean: true
-  }, [ '../tests/data/akc.json'])
+  }, [ './tests/data/akc.json'])
   .then((results) => results[0])
     .then((result) => {
+      // console.dir(result);
       t.equals(result.id, 'akc');
       t.equals(result.schema + '\n', expectedSchema);
     })
@@ -39,6 +39,7 @@ test('file', function(t) {
     .catch((err) => { t.error(err); t.end(); });
 })
 
+/*
 test("URL", function(t) {
   mainHelper.doit( {
     unitTestMode: true,
@@ -53,9 +54,10 @@ test("URL", function(t) {
     .catch((err) => { t.error(err); t.end(); });
 
 });
+*/
 
 test("URI", function(t) {
-  mainHelper.doit( {
+  cli.doit( {
     unitTestMode: true,
     uri: process.env.MONGOLAB_URI
   }, [])
@@ -68,6 +70,7 @@ test("URI", function(t) {
     .catch((err) => {  t.error(err); t.end(); });
 });
 
+/*
 test("Github", function(t) {
   const expectedSchema = fs.readFileSync('./tests/data/github1schema.txt').toString();
   mainHelper.doit( {
@@ -83,11 +86,4 @@ test("Github", function(t) {
     .catch((err) => {  t.error(err); t.end(); });
 });
 
-
-test("createHeaders", function(t) {
-  let h = urlutils.createHeaders( { foo: 1}, "bar:bar:1");
-  // console.dir(h);
-  t.equals(h.foo, 1);
-  t.equals(h.bar, "bar:1");
-  t.end();
-})
+*/
