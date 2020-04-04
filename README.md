@@ -68,6 +68,18 @@ type people {
   url: Id
 }
 ```
+### Working with an existing MongoDB?
+
+The [mongo-graphql-starter](https://github.com/arackaf/mongo-graphql-starter) project
+"Creates a fully functioning, performant GraphQL endpoint from an existing MongoDB".  But it needs some [setup work](https://github.com/arackaf/mongo-graphql-starter#how-do-you-use-it) to define your tables.
+
+You can do **most** of the gruntwork setting up the projectSetupA.js file using this:
+
+`>j2gt --uri=mongodb://user:password@host:port/database?options > someOutputFile`
+
+You'll then need to
+ - add table: "abc..." and explicit fields: { ... }
+ - do some editing and find and replace for some of the values.
 
 ## Installation
 ```
