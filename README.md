@@ -134,6 +134,10 @@ These files contain additional typing details such as `{"$date":{"$numberLong":"
  - --BSONFile=name  use conversions read from this JSON file
  - --clean          Since the exports are not in proper JSON format, you must correct them
 
+## Using in a Broswer
+
+Very Quick and Dirty example code in browser_example.html
+
 ## JSONToGraphQLTS
 
 Module that does the actual conversion of an **object** into a string graphql type representation.
