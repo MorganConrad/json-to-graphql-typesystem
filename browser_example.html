@@ -1,0 +1,30 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Example JSONToGraphQLTS</title>
+
+
+</head>
+
+<body>
+  In a real example there'd be some input gizmo for the user
+  We just use Chuck Norris Jokes <br>
+
+  <textarea id="result" rows="12" columns="30"></textarea>
+  <script src="./json-to-graphql-typesystem.js"></script>
+
+  <script>
+    let js2gql = new JSONToGraphQLTS()
+
+    fetch("http://api.icndb.com/jokes/random")
+      .then(response => response.json())
+      .then(ob => js2gql.convert(ob))
+      .then(function(s) {
+        document.getElementById("result").value = s;
+      })
+  </script>
+</body>
+</html>
